@@ -12,7 +12,7 @@ Note : Still in development phase .
 - **Environment Controls**: Manage power settings, security protocols, and auto shutdown.
 
 ## Tech Stack
-- **Frontend**: React, Next.js, Tailwind CSS
+- **Frontend**: TypeScript, React, Next.js, Tailwind CSS
 - **Backend**: Node.js, Express.js (Optional)
 - **Database**: MongoDB / PostgreSQL (Optional)
 - **State Management**: React Context / Redux
