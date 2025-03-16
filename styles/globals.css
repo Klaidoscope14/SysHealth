@@ -92,3 +92,12 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .chart-indicator {
+    --color-bg: var(--chart-1);
+    --color-border: var(--chart-1);
+    background-color: var(--color-bg);
+    border-color: var(--color-border);
+  }
+}
