@@ -5,6 +5,7 @@ import { PageContainer } from "@/components/page-container"
 import { Card } from "@/components/ui/card"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
+// Define the shape of the metrics object that holds CPU and memory data.
 interface Metrics {
   cpu: {
     usage: number
@@ -24,6 +25,7 @@ interface Metrics {
   }
 }
 
+// Define the structure of the chart data that will be used to display CPU and memory usage over time.
 interface ChartData {
   timestamp: string
   cpu: number
@@ -31,49 +33,48 @@ interface ChartData {
 }
 
 export default function CpuMemoryPage() {
-  const [metrics, setMetrics] = useState<Metrics>({
-    cpu: {
-      usage: 0,
-      cores: 0,
-      clockSpeed: 0,
-      loadAverage: { '1min': 0, '5min': 0, '15min': 0 }
-    },
-    memory: {
-      total: 0,
-      used: 0,
-      free: 0,
-      usagePercentage: 0
-    }
-  })
-  const [chartData, setChartData] = useState<ChartData[]>([])
+  const [metrics, setMetrics] = useState<Metrics | null>(null) // Store CPU and memory metrics (initially null for loading state).
+  const [chartData, setChartData] = useState<ChartData[]>([]) // Store the data points for the chart.
 
+  // Fetch metrics every 5 seconds to update the system resource usage over time.
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const response = await fetch("/api/metrics")
-        if (!response.ok) throw new Error("Failed to fetch metrics")
-        const data = await response.json()
-        setMetrics(data)
+        const response = await fetch("/api/metrics") // Fetch metrics from the API endpoint.
+        if (!response.ok) throw new Error("Failed to fetch metrics") // Handle error if API call fails.
+        const data = await response.json() // Parse the response into JSON.
+        setMetrics(data) // Set the fetched metrics data.
         
+        // Prepare the timestamp for when the data is recorded.
         const timestamp = new Date().toLocaleTimeString()
+
+        // Update the chart data by adding a new data point.
         setChartData(prev => {
           const newData = [...prev, {
             timestamp,
             cpu: data.cpu.usage,
             memory: data.memory.usagePercentage
           }]
-          if (newData.length > 20) newData.shift()
+          
+          // Keep only the last 20 data points to avoid the chart becoming too large.
+          if (newData.length > 20) newData.shift() // Remove the oldest data point if the length exceeds 20.
           return newData
         })
       } catch (error) {
-        console.error("Error fetching metrics:", error)
+        console.error("Error fetching metrics:", error) // Log any errors that occur during the fetch.
       }
     }
 
-    fetchMetrics()
-    const interval = setInterval(fetchMetrics, 5000)
-    return () => clearInterval(interval)
+    fetchMetrics() // Fetch metrics when the component first renders.
+    const interval = setInterval(fetchMetrics, 5000) // Set an interval to fetch the metrics every 5 seconds.
+
+    return () => clearInterval(interval) // Clear the interval when the component is unmounted to prevent memory leaks.
   }, [])
+
+  // Display loading message while metrics data is not available.
+  if (!metrics) {
+    return <div>Loading...</div> // Display a loading state until metrics are fetched.
+  }
 
   return (
     <PageContainer
@@ -90,9 +91,9 @@ export default function CpuMemoryPage() {
               <h3 className="text-sm font-medium text-slate-300 mb-4">CPU Usage Over Time</h3>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}>
+                  <AreaChart data={chartData}> {/* Chart component to display data */}
                     <defs>
-                      <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1"> {/* Gradient for CPU usage area */}
                         <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3} />
                         <stop offset="95%" stopColor="#22d3ee" stopOpacity={0} />
                       </linearGradient>
@@ -104,9 +105,9 @@ export default function CpuMemoryPage() {
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      domain={[0, 100]}
-                      ticks={[0, 25, 50, 75, 100]}
-                      tickFormatter={(value) => `${value}%`}
+                      domain={[0, 100]} // Set the Y-axis range for percentage (0% to 100%).
+                      ticks={[0, 25, 50, 75, 100]} // Define tick marks for the Y-axis.
+                      tickFormatter={(value) => `${value}%`} // Format the Y-axis ticks as percentages.
                     />
                     <Tooltip
                       contentStyle={{
@@ -132,6 +133,7 @@ export default function CpuMemoryPage() {
             <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm p-4">
               <h3 className="text-sm font-medium text-slate-300 mb-4">CPU Details</h3>
               <div className="space-y-6">
+                {/* Display current CPU usage with a progress bar */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm text-slate-400">Current Usage</span>
@@ -145,6 +147,7 @@ export default function CpuMemoryPage() {
                   </div>
                 </div>
 
+                {/* Display CPU details such as cores and clock speed */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-xs text-slate-400 mb-1">Cores</div>
@@ -156,6 +159,7 @@ export default function CpuMemoryPage() {
                   </div>
                 </div>
 
+                {/* Display CPU load averages for 1, 5, and 15 minutes */}
                 <div>
                   <div className="text-xs text-slate-400 mb-2">Load Average</div>
                   <div className="grid grid-cols-3 gap-2">
@@ -201,7 +205,7 @@ export default function CpuMemoryPage() {
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      domain={[0, 100]}
+                      domain={[0, 100]} // Set the Y-axis range for memory usage percentage (0% to 100%).
                       ticks={[0, 25, 50, 75, 100]}
                       tickFormatter={(value) => `${value}%`}
                     />
@@ -229,6 +233,7 @@ export default function CpuMemoryPage() {
             <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm p-4">
               <h3 className="text-sm font-medium text-slate-300 mb-4">Memory Details</h3>
               <div className="space-y-6">
+                {/* Display current memory usage with a progress bar */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm text-slate-400">Memory Usage</span>
@@ -242,6 +247,7 @@ export default function CpuMemoryPage() {
                   </div>
                 </div>
 
+                {/* Display memory statistics (total, used, and free memory) */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-xs text-slate-400 mb-1">Total Memory</div>
@@ -263,4 +269,4 @@ export default function CpuMemoryPage() {
       </div>
     </PageContainer>
   )
-} 
+}
