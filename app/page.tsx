@@ -4,12 +4,10 @@ import { PageContainer } from "@/components/page-container" // Importing the Pag
 import { Activity, Cpu, HardDrive, MemoryStick } from "lucide-react" // Importing icons from the Lucide icon set to represent system components.
 import { PerformanceGraph } from "@/components/PerformanceGraph" // Importing the PerformanceGraph component for displaying system performance.
 import { DashboardSidebar } from "@/components/DashboardSidebar" // Importing the DashboardSidebar component for sidebar navigation.
-import { TopNav } from "@/components/TopNav" // Importing the TopNav component for the top navigation bar.
 
 export default function DashboardPage() {
   return (
     <>
-      <TopNav /> {/* Rendering the top navigation bar */}
       <PageContainer
         title="Dashboard" // Setting the page title as "Dashboard".
         description="System overview and main metrics" // Description for the page, providing context about the dashboard.

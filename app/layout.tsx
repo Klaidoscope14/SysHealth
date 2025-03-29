@@ -4,6 +4,7 @@ import { Inter } from "next/font/google" // Importing the Inter font from Google
 import { SidebarProvider, Sidebar, SidebarContent } from "@/components/ui/sidebar" // Importing sidebar components to build the sidebar navigation.
 import { SidebarNav } from "@/components/sidebar-nav" // Importing the navigation component for the sidebar.
 import "./globals.css" // Importing the global CSS styles.
+import { TopNav } from "@/components/TopNav"
 
 const inter = Inter({ subsets: ["latin"] }) // Initializing the Inter font with Latin characters support.
 
@@ -39,6 +40,7 @@ export default function RootLayout({
                 {/* Sticky header with blurred background on scroll */}
                 <div className="flex h-14 items-center px-6">
                   <h1 className="text-lg font-semibold">System Monitor</h1> {/* Page title */}
+                  <TopNav/>
                 </div>
               </header>
               
