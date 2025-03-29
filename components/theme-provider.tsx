@@ -1,11 +1,16 @@
-'use client'
+"use client" // Ensures this component runs on the client side in Next.js
 
-import * as React from 'react'
 import {
-  ThemeProvider as NextThemesProvider,
-  type ThemeProviderProps,
-} from 'next-themes'
+  ThemeProvider as NextThemesProvider, // Import ThemeProvider from next-themes
+  type ThemeProviderProps, // Import the type definition for props
+} from "next-themes"
 
+// Define a custom ThemeProvider component that wraps around next-themes
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+  return (
+    // Pass all received props to NextThemesProvider and render children
+    <NextThemesProvider {...props}>
+      {children}
+    </NextThemesProvider>
+  )
 }
