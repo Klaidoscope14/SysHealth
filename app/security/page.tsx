@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { PageContainer } from "@/components/page-container" // Importing the PageContainer component for consistent page layout.
 import { Card } from "@/components/ui/card"
 import { AlertTriangle, Shield, FileText, Check, X, AlertCircle, Clock, Shield as ShieldIcon } from "lucide-react"
-import { Progress } from "@/components/ui/progress"
 
 // Define interfaces
 interface SecurityStatus {
@@ -228,7 +227,7 @@ export default function SecurityPage() {
     <PageContainer
       title="Security"
       description="Monitor and manage system security"
-      className="max-w-full w-full px-0"
+      className="max-w-full w-full px-5"
     >
       <div className="flex flex-col space-y-8 w-full px-2">
         {/* Security Status Card */}
@@ -250,7 +249,7 @@ export default function SecurityPage() {
                        securityStatus.overallStatus === 'warning' ? 'Security Warning' : 'System Vulnerable'}
                     </span>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center m-5">
                     <Clock className="h-4 w-4 dark:text-slate-400 text-slate-600 mr-1" />
                     <span className="text-xs dark:text-slate-400 text-slate-600">
                       Last scan: {formatTimestamp(securityStatus.lastScan)}
