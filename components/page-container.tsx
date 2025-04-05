@@ -16,10 +16,10 @@ export function PageContainer({
   ...props
 }: PageContainerProps) {
   return (
-    <div className={cn("flex flex-col gap-4 p-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-4 p-4 w-full max-w-full", className)} {...props}>
       {/* Main container div with flex layout and padding, and accepts custom classes through `className` */}
       
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 w-full">
         {/* Title and description section */}
         <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
         {/* Title of the page, with larger text size, bold font, and tight letter spacing */}
@@ -32,7 +32,9 @@ export function PageContainer({
       </div>
       
       {/* Render the children content passed to the component */}
-      {children}
+      <div className="w-full">
+        {children}
+      </div>
     </div>
   )
 }

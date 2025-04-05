@@ -33,7 +33,6 @@ interface DetailedMetrics {
   cpu: {
     usage: number;
     cores: number;
-    temperature: number;
     clockSpeed: number;
     loadAverage: {
       '1min': number;
@@ -45,16 +44,26 @@ interface DetailedMetrics {
     total: number;
     used: number;
     free: number;
-    cached: number;
-    buffers: number;
     usagePercentage: number;
-    swapUsed: number;
-    swapTotal: number;
   };
 }
 
 export function PerformanceGraph() {
-  const [chartData, setChartData] = useState<MetricData[]>([])
+  const [chartData, setChartData] = useState<MetricData[]>([
+    // Initialize with a couple of dummy data points to ensure chart renders immediately
+    {
+      timestamp: "00:00:00",
+      cpu: 0,
+      memory: 0,
+      network: 0
+    },
+    {
+      timestamp: "00:00:05",
+      cpu: 5,
+      memory: 10,
+      network: 15
+    }
+  ])
   const [systemLoad, setSystemLoad] = useState(0)
   const [processes, setProcesses] = useState<ProcessData[]>([])
   const [processError, setProcessError] = useState<string | null>(null)
@@ -64,7 +73,6 @@ export function PerformanceGraph() {
     cpu: {
       usage: 0,
       cores: 0,
-      temperature: 0,
       clockSpeed: 0,
       loadAverage: { '1min': 0, '5min': 0, '15min': 0 }
     },
@@ -72,11 +80,7 @@ export function PerformanceGraph() {
       total: 0,
       used: 0,
       free: 0,
-      cached: 0,
-      buffers: 0,
-      usagePercentage: 0,
-      swapUsed: 0,
-      swapTotal: 0
+      usagePercentage: 0
     }
   })
 
@@ -87,6 +91,8 @@ export function PerformanceGraph() {
         if (!response.ok) throw new Error("Failed to fetch metrics")
         const data = await response.json()
         
+        console.log("API Response:", data);
+        
         const timestamp = new Date().toLocaleTimeString()
         setSystemLoad(data.cpu.usage)
         setDetailedMetrics(data)
@@ -96,9 +102,10 @@ export function PerformanceGraph() {
             timestamp,
             cpu: data.cpu.usage,
             memory: data.memory.usagePercentage,
-            network: Math.random() * 30 + 20
+            network: Math.floor(Math.random() * 30) + 5
           }]
           if (newData.length > 20) newData.shift()
+          console.log("Chart Data:", newData);
           return newData
         })
       } catch (error) {
@@ -150,32 +157,32 @@ export function PerformanceGraph() {
   }, [])
 
   return (
-    <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm overflow-hidden">
-      <CardHeader className="border-b border-slate-700/50 pb-3">
+    <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm overflow-hidden">
+      <CardHeader className="border-b dark:border-slate-700/50 border-slate-200/70 pb-3">
         <Tabs defaultValue="performance" className="w-full">
           <div className="flex items-center justify-between mb-4">
-            <TabsList className="bg-slate-800/50 p-1">
+            <TabsList className="dark:bg-slate-800/50 bg-slate-200/50 p-1">
               <TabsTrigger
                 value="performance"
-                className="data-[state=active]:bg-slate-700 data-[state=active]:text-cyan-400"
+                className="dark:data-[state=active]:bg-slate-700 dark:data-[state=active]:text-cyan-400 data-[state=active]:bg-white data-[state=active]:text-blue-600"
               >
                 Performance
               </TabsTrigger>
               <TabsTrigger
                 value="processes"
-                className="data-[state=active]:bg-slate-700 data-[state=active]:text-cyan-400"
+                className="dark:data-[state=active]:bg-slate-700 dark:data-[state=active]:text-cyan-400 data-[state=active]:bg-white data-[state=active]:text-blue-600"
               >
                 Processes
               </TabsTrigger>
               <TabsTrigger
                 value="storage"
-                className="data-[state=active]:bg-slate-700 data-[state=active]:text-cyan-400"
+                className="dark:data-[state=active]:bg-slate-700 dark:data-[state=active]:text-cyan-400 data-[state=active]:bg-white data-[state=active]:text-blue-600"
               >
                 Storage
               </TabsTrigger>
             </TabsList>
 
-            <div className="flex items-center space-x-2 text-xs text-slate-400">
+            <div className="flex items-center space-x-2 text-xs dark:text-slate-400 text-slate-600">
               <div className="flex items-center">
                 <div className="h-2 w-2 rounded-full bg-cyan-500 mr-1"></div>
                 CPU
@@ -198,7 +205,11 @@ export function PerformanceGraph() {
                 <div className="relative">
                   <div className="h-[300px]">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                      <AreaChart 
+                        data={chartData} 
+                        margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
+                        key="performance-chart"
+                      >
                         <defs>
                           <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3} />
@@ -241,20 +252,48 @@ export function PerformanceGraph() {
                           axisLine={false}
                         />
                         
+                        {/* Tooltip for displaying values on hover */}
                         <Tooltip
-                          contentStyle={{
-                            backgroundColor: "rgba(15, 23, 42, 0.9)",
-                            border: "1px solid rgba(148, 163, 184, 0.2)",
-                            borderRadius: "6px",
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              return (
+                                <div className="dark:bg-slate-800/90 bg-white/90 px-3 py-2 shadow-md rounded border dark:border-slate-700/50 border-slate-200/50">
+                                  <p className="text-sm font-medium dark:text-slate-200 text-slate-700">
+                                    {payload[0].payload.timestamp}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <div className="h-2 w-2 rounded-full bg-cyan-500" />
+                                    <p className="text-xs dark:text-cyan-400 text-cyan-600">
+                                      CPU: {payload[0].value}%
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <div className="h-2 w-2 rounded-full bg-purple-500" />
+                                    <p className="text-xs dark:text-purple-400 text-purple-600">
+                                      Memory: {payload[1].value}%
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <div className="h-2 w-2 rounded-full bg-blue-500" />
+                                    <p className="text-xs dark:text-blue-400 text-blue-600">
+                                      Network: {payload[2].value}%
+                                    </p>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
                           }}
                         />
                         
+                        {/* Areas for each metric */}
                         <Area
                           type="monotone"
                           dataKey="cpu"
                           stroke="#22d3ee"
                           fill="url(#colorCpu)"
                           strokeWidth={2}
+                          activeDot={{ r: 4 }}
                           name="CPU"
                         />
                         <Area
@@ -263,6 +302,7 @@ export function PerformanceGraph() {
                           stroke="#a855f7"
                           fill="url(#colorMemory)"
                           strokeWidth={2}
+                          activeDot={{ r: 4 }}
                           name="Memory"
                         />
                         <Area
@@ -271,47 +311,83 @@ export function PerformanceGraph() {
                           stroke="#3b82f6"
                           fill="url(#colorNetwork)"
                           strokeWidth={2}
+                          activeDot={{ r: 4 }}
                           name="Network"
                         />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
-                  
-                  {/* System Load Overlay */}
-                  <div className="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-sm rounded-md px-3 py-2 border border-slate-700/50">
-                    <div className="text-xs text-slate-400">System Load</div>
-                    <div className="text-lg font-mono text-cyan-400">{systemLoad}%</div>
-                  </div>
                 </div>
               </div>
 
-              {/* Right side quick stats - 1 column */}
+              {/* Stats sidebar - 1 column */}
               <div className="col-span-1">
-                <div className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
-                  <h3 className="text-sm font-medium text-slate-300 mb-3">Quick Stats</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="text-xs text-slate-400 mb-1">CPU Utilization</div>
-                      <div className="flex items-center">
-                        <div className="flex-grow h-1.5 bg-slate-700/30 rounded-full mr-2">
-                          <div
-                            className="h-full bg-cyan-500 rounded-full"
-                            style={{ width: `${detailedMetrics.cpu.usage}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-cyan-400">{detailedMetrics.cpu.usage}%</span>
+                <div className="space-y-4">
+                  {/* CPU Stats */}
+                  <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded-lg p-3">
+                    <h4 className="text-xs uppercase tracking-wider dark:text-slate-400 text-slate-500 mb-2">CPU</h4>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Usage</span>
+                        <span className="text-xs font-medium dark:text-cyan-400 text-cyan-600">
+                          {detailedMetrics.cpu.usage}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Cores</span>
+                        <span className="text-xs font-medium dark:text-cyan-400 text-cyan-600">
+                          {detailedMetrics.cpu.cores}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Load (5m)</span>
+                        <span className="text-xs font-medium dark:text-cyan-400 text-cyan-600">
+                          {detailedMetrics.cpu.loadAverage['5min'].toFixed(2)}
+                        </span>
                       </div>
                     </div>
-                    <div>
-                      <div className="text-xs text-slate-400 mb-1">Memory Usage</div>
-                      <div className="flex items-center">
-                        <div className="flex-grow h-1.5 bg-slate-700/30 rounded-full mr-2">
-                          <div
-                            className="h-full bg-purple-500 rounded-full"
-                            style={{ width: `${detailedMetrics.memory.usagePercentage}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-purple-400">{detailedMetrics.memory.usagePercentage}%</span>
+                  </div>
+
+                  {/* Memory Stats */}
+                  <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded-lg p-3">
+                    <h4 className="text-xs uppercase tracking-wider dark:text-slate-400 text-slate-500 mb-2">Memory</h4>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Usage</span>
+                        <span className="text-xs font-medium dark:text-purple-400 text-purple-600">
+                          {detailedMetrics.memory.usagePercentage}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Total</span>
+                        <span className="text-xs font-medium dark:text-purple-400 text-purple-600">
+                          {(detailedMetrics.memory.total / 1024).toFixed(1)} GB
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Free</span>
+                        <span className="text-xs font-medium dark:text-purple-400 text-purple-600">
+                          {(detailedMetrics.memory.free / 1024).toFixed(1)} GB
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Network Stats - Placeholder */}
+                  <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded-lg p-3">
+                    <h4 className="text-xs uppercase tracking-wider dark:text-slate-400 text-slate-500 mb-2">Network</h4>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Upload</span>
+                        <span className="text-xs font-medium dark:text-blue-400 text-blue-600">3.2 MB/s</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Download</span>
+                        <span className="text-xs font-medium dark:text-blue-400 text-blue-600">5.7 MB/s</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-xs dark:text-slate-400 text-slate-600">Latency</span>
+                        <span className="text-xs font-medium dark:text-blue-400 text-blue-600">24 ms</span>
                       </div>
                     </div>
                   </div>

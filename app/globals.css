@@ -2,11 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* Dark mode (default) */
+.dark body {
   background: linear-gradient(to bottom, #0B0F1A, #1A1F2E);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+}
+
+.dark body::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  z-index: 0;
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0),
+    radial-gradient(circle at 3px 3px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+  background-size: 30px 30px, 60px 60px;
+  background-position: 0 0, 15px 15px;
+  animation: starsMove 100s linear infinite;
+  pointer-events: none;
+}
+
+/* Light mode */
+body {
+  background: linear-gradient(to bottom, #f0f4f8, #e1e8ef);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  color: #334155;
 }
 
 body::before {
@@ -18,8 +45,8 @@ body::before {
   left: -50%;
   z-index: 0;
   background-image: 
-    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0),
-    radial-gradient(circle at 3px 3px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+    radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.05) 1px, transparent 0),
+    radial-gradient(circle at 3px 3px, rgba(0, 0, 0, 0.02) 1px, transparent 0);
   background-size: 30px 30px, 60px 60px;
   background-position: 0 0, 15px 15px;
   animation: starsMove 100s linear infinite;
@@ -40,7 +67,8 @@ main {
   }
 }
 
-.glass-card {
+/* Dark mode glass card */
+.dark .glass-card {
   background: rgba(255, 255, 255, 0.03);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -48,15 +76,52 @@ main {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+/* Light mode glass card */
+.glass-card {
+  @apply bg-white/60 dark:bg-slate-900/50;
+  @apply border border-slate-200/70 dark:border-slate-700/50;
+  @apply backdrop-blur-sm;
+  @apply shadow-sm;
+  @apply transition-all duration-200;
+}
+
+.glass-card:hover {
+  @apply bg-white/70 dark:bg-slate-900/60;
+  @apply shadow-md;
+}
+
 @layer base {
   :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+  
+  .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -68,7 +133,7 @@ main {
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 224.3 76.3% 48%;
     --radius: 0.5rem;
   }
 }

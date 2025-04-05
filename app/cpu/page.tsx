@@ -80,15 +80,16 @@ export default function CpuMemoryPage() {
     <PageContainer
       title="CPU & Memory"
       description="System resource monitoring"
+      className="max-w-full w-full"
     >
-      <div className="grid gap-6">
+      <div className="grid gap-6 w-full">
         {/* CPU Section */}
         <section>
-          <h2 className="text-xl font-semibold text-slate-200 mb-4">CPU Performance</h2>
-          <div className="grid gap-6 lg:grid-cols-3">
+          <h2 className="text-xl font-semibold dark:text-slate-200 text-slate-800 mb-4">CPU Performance</h2>
+          <div className="grid gap-6 lg:grid-cols-3 w-full">
             {/* CPU Usage Chart */}
-            <Card className="lg:col-span-2 bg-slate-900/50 border-slate-700/50 backdrop-blur-sm p-4">
-              <h3 className="text-sm font-medium text-slate-300 mb-4">CPU Usage Over Time</h3>
+            <Card className="lg:col-span-2 dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 w-full transition-all duration-300">
+              <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">CPU Usage Over Time</h3>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}> {/* Chart component to display data */}
@@ -110,10 +111,23 @@ export default function CpuMemoryPage() {
                       tickFormatter={(value) => `${value}%`} // Format the Y-axis ticks as percentages.
                     />
                     <Tooltip
-                      contentStyle={{
-                        backgroundColor: "rgba(15, 23, 42, 0.9)",
-                        border: "1px solid rgba(148, 163, 184, 0.2)",
-                        borderRadius: "6px",
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="bg-slate-800/90 dark:bg-slate-800/90 bg-white/90 px-3 py-2 shadow-md rounded border border-slate-700/50 dark:border-slate-700/50 border-slate-200/50">
+                              <p className="text-sm font-medium dark:text-slate-200 text-slate-700">
+                                {payload[0].payload.timestamp}
+                              </p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <div className="h-2 w-2 rounded-full bg-cyan-500" />
+                                <p className="text-xs dark:text-cyan-400 text-cyan-600">
+                                  CPU: {payload[0].value}%
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
                       }}
                     />
                     <Area
@@ -130,18 +144,18 @@ export default function CpuMemoryPage() {
             </Card>
 
             {/* CPU Stats */}
-            <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm p-4">
-              <h3 className="text-sm font-medium text-slate-300 mb-4">CPU Details</h3>
+            <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 w-full transition-all duration-300">
+              <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">CPU Details</h3>
               <div className="space-y-6">
                 {/* Display current CPU usage with a progress bar */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-slate-400">Current Usage</span>
-                    <span className="text-lg font-semibold text-cyan-400">{metrics.cpu.usage}%</span>
+                    <span className="text-sm dark:text-slate-400 text-slate-600">Current Usage</span>
+                    <span className="text-lg font-semibold dark:text-cyan-400 text-cyan-600">{metrics.cpu.usage}%</span>
                   </div>
-                  <div className="h-2 bg-slate-700/30 rounded-full">
+                  <div className="h-2 dark:bg-slate-700/30 bg-slate-200/70 rounded-full">
                     <div
-                      className="h-full bg-cyan-500 rounded-full"
+                      className="h-full bg-cyan-500 rounded-full transition-all duration-300"
                       style={{ width: `${metrics.cpu.usage}%` }}
                     />
                   </div>
@@ -149,31 +163,31 @@ export default function CpuMemoryPage() {
 
                 {/* Display CPU details such as cores and clock speed */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-xs text-slate-400 mb-1">Cores</div>
-                    <div className="text-sm text-cyan-400">{metrics.cpu.cores} Cores</div>
+                  <div className="dark:bg-slate-800/30 bg-slate-100/50 p-3 rounded-lg hover:dark:bg-slate-700/40 hover:bg-slate-200/70 transition-all duration-200">
+                    <div className="text-xs dark:text-slate-400 text-slate-600 mb-1">Cores</div>
+                    <div className="text-sm dark:text-cyan-400 text-cyan-600">{metrics.cpu.cores} Cores</div>
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-400 mb-1">Clock Speed</div>
-                    <div className="text-sm text-cyan-400">{metrics.cpu.clockSpeed.toFixed(2)} GHz</div>
+                  <div className="dark:bg-slate-800/30 bg-slate-100/50 p-3 rounded-lg hover:dark:bg-slate-700/40 hover:bg-slate-200/70 transition-all duration-200">
+                    <div className="text-xs dark:text-slate-400 text-slate-600 mb-1">Clock Speed</div>
+                    <div className="text-sm dark:text-cyan-400 text-cyan-600">{metrics.cpu.clockSpeed.toFixed(2)} GHz</div>
                   </div>
                 </div>
 
                 {/* Display CPU load averages for 1, 5, and 15 minutes */}
                 <div>
-                  <div className="text-xs text-slate-400 mb-2">Load Average</div>
+                  <div className="text-xs dark:text-slate-400 text-slate-600 mb-2">Load Average</div>
                   <div className="grid grid-cols-3 gap-2">
-                    <div className="bg-slate-800/50 rounded p-2">
-                      <div className="text-xs text-slate-400">1 min</div>
-                      <div className="text-sm text-cyan-400">{metrics.cpu.loadAverage['1min'].toFixed(2)}</div>
+                    <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded p-2 hover:dark:bg-slate-700/60 hover:bg-slate-200/80 transition-all duration-200">
+                      <div className="text-xs dark:text-slate-400 text-slate-600">1 min</div>
+                      <div className="text-sm dark:text-cyan-400 text-cyan-600">{metrics.cpu.loadAverage['1min'].toFixed(2)}</div>
                     </div>
-                    <div className="bg-slate-800/50 rounded p-2">
-                      <div className="text-xs text-slate-400">5 min</div>
-                      <div className="text-sm text-cyan-400">{metrics.cpu.loadAverage['5min'].toFixed(2)}</div>
+                    <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded p-2 hover:dark:bg-slate-700/60 hover:bg-slate-200/80 transition-all duration-200">
+                      <div className="text-xs dark:text-slate-400 text-slate-600">5 min</div>
+                      <div className="text-sm dark:text-cyan-400 text-cyan-600">{metrics.cpu.loadAverage['5min'].toFixed(2)}</div>
                     </div>
-                    <div className="bg-slate-800/50 rounded p-2">
-                      <div className="text-xs text-slate-400">15 min</div>
-                      <div className="text-sm text-cyan-400">{metrics.cpu.loadAverage['15min'].toFixed(2)}</div>
+                    <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded p-2 hover:dark:bg-slate-700/60 hover:bg-slate-200/80 transition-all duration-200">
+                      <div className="text-xs dark:text-slate-400 text-slate-600">15 min</div>
+                      <div className="text-sm dark:text-cyan-400 text-cyan-600">{metrics.cpu.loadAverage['15min'].toFixed(2)}</div>
                     </div>
                   </div>
                 </div>
@@ -184,11 +198,11 @@ export default function CpuMemoryPage() {
 
         {/* Memory Section */}
         <section>
-          <h2 className="text-xl font-semibold text-slate-200 mb-4">Memory Usage</h2>
-          <div className="grid gap-6 lg:grid-cols-3">
+          <h2 className="text-xl font-semibold dark:text-slate-200 text-slate-800 mb-4">Memory Usage</h2>
+          <div className="grid gap-6 lg:grid-cols-3 w-full">
             {/* Memory Usage Chart */}
-            <Card className="lg:col-span-2 bg-slate-900/50 border-slate-700/50 backdrop-blur-sm p-4">
-              <h3 className="text-sm font-medium text-slate-300 mb-4">Memory Usage Over Time</h3>
+            <Card className="lg:col-span-2 dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 w-full transition-all duration-300">
+              <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">Memory Usage Over Time</h3>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
@@ -205,15 +219,28 @@ export default function CpuMemoryPage() {
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      domain={[0, 100]} // Set the Y-axis range for memory usage percentage (0% to 100%).
+                      domain={[0, 100]}
                       ticks={[0, 25, 50, 75, 100]}
                       tickFormatter={(value) => `${value}%`}
                     />
                     <Tooltip
-                      contentStyle={{
-                        backgroundColor: "rgba(15, 23, 42, 0.9)",
-                        border: "1px solid rgba(148, 163, 184, 0.2)",
-                        borderRadius: "6px",
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="bg-slate-800/90 dark:bg-slate-800/90 bg-white/90 px-3 py-2 shadow-md rounded border border-slate-700/50 dark:border-slate-700/50 border-slate-200/50">
+                              <p className="text-sm font-medium dark:text-slate-200 text-slate-700">
+                                {payload[0].payload.timestamp}
+                              </p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <div className="h-2 w-2 rounded-full bg-purple-500" />
+                                <p className="text-xs dark:text-purple-400 text-purple-600">
+                                  Memory: {payload[0].value}%
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
                       }}
                     />
                     <Area
@@ -230,36 +257,34 @@ export default function CpuMemoryPage() {
             </Card>
 
             {/* Memory Stats */}
-            <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm p-4">
-              <h3 className="text-sm font-medium text-slate-300 mb-4">Memory Details</h3>
+            <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 w-full transition-all duration-300">
+              <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">Memory Details</h3>
               <div className="space-y-6">
-                {/* Display current memory usage with a progress bar */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-slate-400">Memory Usage</span>
-                    <span className="text-lg font-semibold text-purple-400">{metrics.memory.usagePercentage}%</span>
+                    <span className="text-sm dark:text-slate-400 text-slate-600">Memory Usage</span>
+                    <span className="text-lg font-semibold dark:text-purple-400 text-purple-600">{metrics.memory.usagePercentage}%</span>
                   </div>
-                  <div className="h-2 bg-slate-700/30 rounded-full">
+                  <div className="h-2 dark:bg-slate-700/30 bg-slate-200/70 rounded-full">
                     <div
-                      className="h-full bg-purple-500 rounded-full"
+                      className="h-full bg-purple-500 rounded-full transition-all duration-300"
                       style={{ width: `${metrics.memory.usagePercentage}%` }}
                     />
                   </div>
                 </div>
 
-                {/* Display memory statistics (total, used, and free memory) */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-xs text-slate-400 mb-1">Total Memory</div>
-                    <div className="text-sm text-purple-400">{(metrics.memory.total / 1024).toFixed(1)} GB</div>
+                  <div className="dark:bg-slate-800/30 bg-slate-100/50 p-3 rounded-lg hover:dark:bg-slate-700/40 hover:bg-slate-200/70 transition-all duration-200">
+                    <div className="text-xs dark:text-slate-400 text-slate-600 mb-1">Total Memory</div>
+                    <div className="text-sm dark:text-purple-400 text-purple-600">{(metrics.memory.total / 1024).toFixed(1)} GB</div>
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-400 mb-1">Used Memory</div>
-                    <div className="text-sm text-purple-400">{(metrics.memory.used / 1024).toFixed(1)} GB</div>
+                  <div className="dark:bg-slate-800/30 bg-slate-100/50 p-3 rounded-lg hover:dark:bg-slate-700/40 hover:bg-slate-200/70 transition-all duration-200">
+                    <div className="text-xs dark:text-slate-400 text-slate-600 mb-1">Used Memory</div>
+                    <div className="text-sm dark:text-purple-400 text-purple-600">{(metrics.memory.used / 1024).toFixed(1)} GB</div>
                   </div>
-                  <div>
-                    <div className="text-xs text-slate-400 mb-1">Free Memory</div>
-                    <div className="text-sm text-purple-400">{(metrics.memory.free / 1024).toFixed(1)} GB</div>
+                  <div className="dark:bg-slate-800/30 bg-slate-100/50 p-3 rounded-lg hover:dark:bg-slate-700/40 hover:bg-slate-200/70 transition-all duration-200">
+                    <div className="text-xs dark:text-slate-400 text-slate-600 mb-1">Free Memory</div>
+                    <div className="text-sm dark:text-purple-400 text-purple-600">{(metrics.memory.free / 1024).toFixed(1)} GB</div>
                   </div>
                 </div>
               </div>
