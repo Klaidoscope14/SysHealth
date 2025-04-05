@@ -16,6 +16,7 @@ import Link from "next/link"
 export function TopNav() {
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(true)
   const [userProfile, setUserProfile] = useState({
     name: "User Account",
     email: "loading..."
@@ -93,6 +94,11 @@ export function TopNav() {
     // You could redirect to login page or clear credentials here
   }
 
+  // Mark notifications as read when dropdown is opened
+  const handleNotificationsOpen = () => {
+    setHasUnreadNotifications(false)
+  }
+
   return (
     <div className="flex items-center gap-4">
       {/* Theme Toggle */}
@@ -112,7 +118,7 @@ export function TopNav() {
       </Button>
 
       {/* Notifications */}
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={handleNotificationsOpen}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
@@ -121,7 +127,9 @@ export function TopNav() {
             aria-label="Notifications"
           >
             <Bell className="h-4 w-4 dark:text-slate-300 text-slate-700" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-cyan-500 border-2 dark:border-slate-900 border-white"></span>
+            {hasUnreadNotifications && (
+              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-cyan-500 border-2 dark:border-slate-900 border-white"></span>
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-80 dark:bg-slate-900/95 bg-white/95 dark:border-slate-700/50 border-slate-200/50 backdrop-blur-sm">
