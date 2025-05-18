@@ -1,14 +1,6 @@
 import { NextResponse } from "next/server" 
-// Importing Next.js response utility to return JSON responses.
-
 import os from "os" 
-// Importing the OS module to retrieve system-level information such as memory usage.
-
 import { execSync } from "child_process" 
-// Importing child_process to execute shell commands for macOS memory retrieval.
-
-import fs from "fs" 
-// Importing file system module to read Linux memory info from `/proc/meminfo`.
 
 export async function GET() {
   try {
@@ -63,17 +55,14 @@ export async function GET() {
         }
       },
       memory: {
-        total: parseInt((totalMem / 1024 / 1024).toFixed(0)), // Convert total memory to MB
-        used: parseInt((usedMem / 1024 / 1024).toFixed(0)),   // Convert used memory to MB
-        free: parseInt((freeMem / 1024 / 1024).toFixed(0)),   // Convert free memory to MB
+        total: parseInt((totalMem / 1024 / 1024).toFixed(0)), 
+        used: parseInt((usedMem / 1024 / 1024).toFixed(0)),   
+        free: parseInt((freeMem / 1024 / 1024).toFixed(0)),  
         usagePercentage: Math.min(100, Math.round(adjustedUsage)) // Cap at 100%
       }
     })
   } catch (error) {
-    // Handle errors gracefully and log them
     console.error("Error fetching system metrics:", error)
-    
-    // Return a 500 error response if something goes wrong
     return NextResponse.json({ error: "Failed to fetch system metrics" }, { status: 500 })
   }
 }

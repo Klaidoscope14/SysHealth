@@ -40,9 +40,9 @@ export default function CpuMemoryPage() {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const response = await fetch("/api/metrics") // Fetch metrics from the API endpoint.
-        if (!response.ok) throw new Error("Failed to fetch metrics") // Handle error if API call fails.
-        const data = await response.json() // Parse the response into JSON.
+        const response = await fetch("/api/metrics") 
+        if (!response.ok) throw new Error("Failed to fetch metrics") 
+        const data = await response.json() 
         setMetrics(data) // Set the fetched metrics data.
         
         // Prepare the timestamp for when the data is recorded.
@@ -92,9 +92,9 @@ export default function CpuMemoryPage() {
               <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">CPU Usage Over Time</h3>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}> {/* Chart component to display data */}
+                  <AreaChart data={chartData}>
                     <defs>
-                      <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1"> {/* Gradient for CPU usage area */}
+                      <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1"> 
                         <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3} />
                         <stop offset="95%" stopColor="#22d3ee" stopOpacity={0} />
                       </linearGradient>
@@ -106,9 +106,9 @@ export default function CpuMemoryPage() {
                       fontSize={12}
                       tickLine={false}
                       axisLine={false}
-                      domain={[0, 100]} // Set the Y-axis range for percentage (0% to 100%).
-                      ticks={[0, 25, 50, 75, 100]} // Define tick marks for the Y-axis.
-                      tickFormatter={(value) => `${value}%`} // Format the Y-axis ticks as percentages.
+                      domain={[0, 100]} 
+                      ticks={[0, 25, 50, 75, 100]} 
+                      tickFormatter={(value) => `${value}%`} 
                     />
                     <Tooltip
                       content={({ active, payload }) => {

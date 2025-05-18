@@ -1,4 +1,4 @@
-"use client" // This directive indicates that this component is a client-side component in a Next.js application.
+"use client" 
 
 import { useState, useEffect } from "react";
 import { PageContainer } from "@/components/page-container";
@@ -94,18 +94,13 @@ export default function SettingsPage() {
           // Save to localStorage
           localStorage.setItem('userProfile', JSON.stringify(profileData));
           
-          // Dispatch custom event to notify other components (especially TopNav)
           const event = new Event('profileUpdated');
           window.dispatchEvent(event);
-          
-          // In a real app, you would save to a database or API
           console.log("Profile saved:", profileData);
           
-          // Update the UI
           setIsProfileSaving(false);
           setProfileSaved(true);
           
-          // Auto hide success message after 3 seconds
           setTimeout(() => setProfileSaved(false), 3000);
         } else {
           console.error("Failed to save profile:", data.error);
@@ -150,7 +145,6 @@ export default function SettingsPage() {
     
     // Simulate API call with timeout
     setTimeout(() => {
-      // In a real app, you would verify the current password and update to the new one
       console.log("Password updated");
       
       // Reset form and show success

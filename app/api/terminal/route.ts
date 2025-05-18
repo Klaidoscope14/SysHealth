@@ -1,7 +1,6 @@
 import { exec } from 'child_process'
 import { NextResponse } from 'next/server'
 
-// Function to determine the correct terminal command based on the operating system
 const getTerminalCommand = () => {
   switch (process.platform) {
     case 'darwin': 
@@ -26,13 +25,13 @@ const getTerminalCommand = () => {
 // API endpoint to open the system terminal
 export async function POST() {
   try {
-    const command = getTerminalCommand() // Get the terminal command based on OS
+    const command = getTerminalCommand() 
     
     return new Promise((resolve) => {
-      exec(command, (error) => { // Execute the command to open the terminal
+      exec(command, (error) => { 
         if (error) {
           console.error('Error executing terminal command:', error)
-          resolve(NextResponse.json({ error: 'Failed to open terminal' }, { status: 500 })) // Return error if execution fails
+          resolve(NextResponse.json({ error: 'Failed to open terminal' }, { status: 500 })) 
         } else {
           resolve(NextResponse.json({ success: true })) // Return success if terminal opens
         }
@@ -40,6 +39,6 @@ export async function POST() {
     })
   } catch (error) {
     console.error('Error in terminal API:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 }) // Handle unexpected errors
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 }) 
   }
 }

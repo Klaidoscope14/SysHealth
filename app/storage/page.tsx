@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react"
 import { PageContainer } from "@/components/page-container"
 import { Card } from "@/components/ui/card"
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line } from "recharts"
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, XAxis, YAxis, CartesianGrid, LineChart, Line } from "recharts"
 import { HardDrive, Database, ArrowDownUp, AlertCircle, Layers } from "lucide-react"
 
-// Define interfaces for our data types
 interface DiskInfo {
   name: string;
   total: string;

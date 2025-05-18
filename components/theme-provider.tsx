@@ -1,4 +1,4 @@
-"use client" // Ensures this component runs on the client side in Next.js
+"use client" 
 
 import {
   ThemeProvider as NextThemesProvider, // Import ThemeProvider from next-themes

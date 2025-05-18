@@ -1,16 +1,16 @@
-"use client" // Indicates that this component is client-side in a Next.js app.
+"use client" 
 
-import { PageContainer } from "@/components/page-container" // Importing the PageContainer component to wrap the page content.
-import { Activity, Cpu, HardDrive, MemoryStick } from "lucide-react" // Importing icons from the Lucide icon set to represent system components.
-import { PerformanceGraph } from "@/components/PerformanceGraph" // Importing the PerformanceGraph component for displaying system performance.
-import { QuickActions } from "@/components/QuickActions" // Importing the QuickActions component for sidebar navigation.
+import { PageContainer } from "@/components/page-container" 
+import { Activity, Cpu, HardDrive, MemoryStick } from "lucide-react" 
+import { PerformanceGraph } from "@/components/PerformanceGraph" 
+import { QuickActions } from "@/components/QuickActions" 
 
 export default function DashboardPage() {
   return (
     <>
       <PageContainer
-        title="Dashboard" // Setting the page title as "Dashboard".
-        description="System overview and main metrics" // Description for the page, providing context about the dashboard.
+        title="Dashboard" 
+        description="System overview and main metrics" 
       >
         {/* Main content container */}
         <div className="flex flex-col lg:flex-row gap-6">

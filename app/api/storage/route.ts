@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
-// Import NextResponse to send JSON responses in a Next.js API route.
-
 import { exec } from 'child_process';
-// Import 'exec' from 'child_process' to run system commands.
-
 import { promisify } from 'util';
-// Import 'promisify' to convert callback-based 'exec' into a promise-based function.
 
 const execAsync = promisify(exec);
 // Convert 'exec' into an async function for easier handling.
@@ -38,19 +33,19 @@ export async function GET() {
         // Helper function to convert sizes (e.g., TB, GB, MB) into GB format.
         const convertToGB = (sizeStr: string) => {
           const num = parseFloat(sizeStr); // Extract numeric value
-          const unit = sizeStr.replace(/[0-9.]/g, ''); // Extract unit (GB, MB, TB)
+          const unit = sizeStr.replace(/[0-9.]/g, ''); 
 
           switch (unit.toUpperCase()) {
-            case 'TB': return `${(num * 1024).toFixed(1)} GB`; // Convert TB to GB
+            case 'TB': return `${(num * 1024).toFixed(1)} GB`; 
             case 'GB':
             case 'G':
             case 'GI':
-            case 'GIB': return `${num.toFixed(1)} GB`; // Keep GB as is
+            case 'GIB': return `${num.toFixed(1)} GB`; 
             case 'MB':
             case 'M':
             case 'MI':
-            case 'MIB': return `${(num / 1024).toFixed(1)} GB`; // Convert MB to GB
-            default: return `${num.toFixed(1)} GB`; // Default case
+            case 'MIB': return `${(num / 1024).toFixed(1)} GB`; 
+            default: return `${num.toFixed(1)} GB`; 
           }
         };
 
@@ -82,16 +77,10 @@ export async function GET() {
       }
     });
 
-    // Sort drives by usage percentage in descending order and take the top 4.
     drives.sort((a, b) => b.usagePercentage - a.usagePercentage);
-
-    // Return a JSON response with the top 4 drives.
     return NextResponse.json({ drives: drives.slice(0, 4) });
   } catch (error) {
-    // Handle errors gracefully by logging them.
     console.error('Error fetching storage info:', error);
-
-    // Return a 500 status code with an error message.
     return NextResponse.json({ error: 'Failed to fetch storage information' }, { status: 500 });
   }
 }
