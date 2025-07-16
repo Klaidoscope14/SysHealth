@@ -1,12 +1,11 @@
-"use client" // This indicates that this is a client-side component in a Next.js application.
+"use client" 
 
 import { useState, useEffect } from "react"
-import { PageContainer } from "@/components/page-container" // Importing the PageContainer component to wrap the content of the page.
+import { PageContainer } from "@/components/page-container"
 import { Card } from "@/components/ui/card"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from "recharts"
-import { NetworkIcon, Activity, Layers, ExternalLink, AlertCircle, Server } from "lucide-react"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { NetworkIcon, Activity, ExternalLink, Server } from "lucide-react"
 
-// Define interfaces for our data types
 interface NetworkData {
   timestamp: string;
   download: number;
@@ -31,7 +30,6 @@ interface NetworkInterface {
   bytesSent: number;
 }
 
-// Generate mock data for development
 const generateNetworkData = () => {
   const data = [];
   const now = new Date();
@@ -50,7 +48,6 @@ const generateNetworkData = () => {
   return data;
 };
 
-// Mock connections data
 const mockConnections: Connection[] = [
   { protocol: "TCP", localAddress: "192.168.1.5:443", foreignAddress: "52.95.54.1:https", state: "ESTABLISHED", pid: "1234" },
   { protocol: "TCP", localAddress: "192.168.1.5:49152", foreignAddress: "142.250.189.174:https", state: "ESTABLISHED", pid: "5678" },
@@ -61,7 +58,6 @@ const mockConnections: Connection[] = [
   { protocol: "UDP", localAddress: "0.0.0.0:68", foreignAddress: "*:*", state: "LISTENING", pid: "3344" },
 ];
 
-// Mock network interfaces data
 const mockInterfaces: NetworkInterface[] = [
   { 
     name: "en0", 
@@ -93,23 +89,19 @@ const mockInterfaces: NetworkInterface[] = [
 ];
 
 export default function NetworkPage() {
-  // State for network data
   const [networkData, setNetworkData] = useState<NetworkData[]>(generateNetworkData());
   const [connections, setConnections] = useState<Connection[]>(mockConnections);
   const [interfaces, setInterfaces] = useState<NetworkInterface[]>(mockInterfaces);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Update network data periodically
   useEffect(() => {
     const updateNetworkData = () => {
       setNetworkData(prev => {
         const newData = [...prev];
         
-        // Remove oldest data point
         if (newData.length > 0) newData.shift();
         
-        // Add new data point
         const now = new Date();
         newData.push({
           timestamp: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -121,7 +113,6 @@ export default function NetworkPage() {
       });
     };
     
-    // Update every 5 seconds
     const interval = setInterval(updateNetworkData, 5000);
     
     return () => clearInterval(interval);
@@ -129,12 +120,11 @@ export default function NetworkPage() {
 
   return (
     <PageContainer
-      title="Network" // Title for the page displayed in the PageContainer.
-      description="Monitor network traffic and connections" // Description for the page, provides information about the page's purpose.
+      title="Network"
+      description="Monitor network traffic and connections"
       className="max-w-full w-full"
     >
       <div className="flex flex-col space-y-6 w-full">
-        {/* Network Traffic Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 w-full transition-all duration-300">
           <div className="flex items-center mb-4">
             <Activity className="h-5 w-5 text-blue-400 mr-2" />
@@ -222,7 +212,6 @@ export default function NetworkPage() {
           </div>
         </Card>
         
-        {/* Active Connections Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 w-full transition-all duration-300">
           <div className="flex items-center mb-4">
             <ExternalLink className="h-5 w-5 text-purple-400 mr-2" />
@@ -273,7 +262,6 @@ export default function NetworkPage() {
           </div>
         </Card>
         
-        {/* Network Interfaces Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 w-full transition-all duration-300">
           <div className="flex items-center mb-4">
             <Server className="h-5 w-5 text-cyan-400 mr-2" />

@@ -21,10 +21,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           
           <SidebarProvider defaultOpen={true}> 
-            <div className="relative flex min-h-screen"> {/* This is the main container with flex layout and full screen height */}
+            <div className="relative flex min-h-screen"> 
               
-              {/* Sidebar Section */}
-              <Sidebar className="border-r dark:border-slate-800"> {/* Sidebar component with a right border */}
+              <Sidebar className="border-r dark:border-slate-800"> 
                 <SidebarContent> 
                   <div className="flex h-14 items-center border-b px-4 dark:border-slate-800"> 
                     <span className="font-semibold">SysHealth</span> 
@@ -33,19 +32,15 @@ export default function RootLayout({
                 </SidebarContent>
               </Sidebar>
 
-              {/* Main Content Area */}
-              <div className="flex-1"> {/* Main content area that takes up the remaining space */}
+              <div className="flex-1"> 
                 
-                {/* Sticky Header */}
                 <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:border-slate-800 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/60">
-                  {/* Sticky header with blurred background on scroll */}
                   <div className="flex h-14 items-center justify-between w-full px-6">
-                    <h1 className="text-lg font-semibold">System Monitor</h1> {/* Page title */}
+                    <h1 className="text-lg font-semibold">System Monitor</h1> 
                     <TopNav />
                   </div>
                 </header>
                 
-                {/* Main Section to display page content */}
                 <main className="flex-1 overflow-y-auto">
                   {children}
                 </main>

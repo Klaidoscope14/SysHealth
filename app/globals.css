@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark mode (default) */
 .dark body {
   background: linear-gradient(to bottom, #0B0F1A, #1A1F2E);
   min-height: 100vh;
@@ -27,7 +26,6 @@
   pointer-events: none;
 }
 
-/* Light mode */
 body {
   background: linear-gradient(to bottom, #f0f4f8, #e1e8ef);
   min-height: 100vh;
@@ -67,7 +65,6 @@ main {
   }
 }
 
-/* Dark mode glass card */
 .dark .glass-card {
   background: rgba(255, 255, 255, 0.03);
   -webkit-backdrop-filter: blur(10px);
@@ -76,7 +73,6 @@ main {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Light mode glass card */
 .glass-card {
   @apply bg-white/60 dark:bg-slate-900/50;
   @apply border border-slate-200/70 dark:border-slate-700/50;

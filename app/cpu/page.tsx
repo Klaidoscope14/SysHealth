@@ -5,7 +5,6 @@ import { PageContainer } from "@/components/page-container"
 import { Card } from "@/components/ui/card"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
-// Define the shape of the metrics object that holds CPU and memory data.
 interface Metrics {
   cpu: {
     usage: number
@@ -25,7 +24,6 @@ interface Metrics {
   }
 }
 
-// Define the structure of the chart data that will be used to display CPU and memory usage over time.
 interface ChartData {
   timestamp: string
   cpu: number
@@ -33,22 +31,18 @@ interface ChartData {
 }
 
 export default function CpuMemoryPage() {
-  const [metrics, setMetrics] = useState<Metrics | null>(null) // Store CPU and memory metrics (initially null for loading state).
-  const [chartData, setChartData] = useState<ChartData[]>([]) // Store the data points for the chart.
+  const [metrics, setMetrics] = useState<Metrics | null>(null) 
+  const [chartData, setChartData] = useState<ChartData[]>([])
 
-  // Fetch metrics every 5 seconds to update the system resource usage over time.
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
         const response = await fetch("/api/metrics") 
         if (!response.ok) throw new Error("Failed to fetch metrics") 
         const data = await response.json() 
-        setMetrics(data) // Set the fetched metrics data.
+        setMetrics(data) 
         
-        // Prepare the timestamp for when the data is recorded.
         const timestamp = new Date().toLocaleTimeString()
-
-        // Update the chart data by adding a new data point.
         setChartData(prev => {
           const newData = [...prev, {
             timestamp,
@@ -56,24 +50,21 @@ export default function CpuMemoryPage() {
             memory: data.memory.usagePercentage
           }]
           
-          // Keep only the last 20 data points to avoid the chart becoming too large.
-          if (newData.length > 20) newData.shift() // Remove the oldest data point if the length exceeds 20.
+          if (newData.length > 20) newData.shift() 
           return newData
         })
       } catch (error) {
-        console.error("Error fetching metrics:", error) // Log any errors that occur during the fetch.
+        console.error("Error fetching metrics:", error)
       }
     }
 
-    fetchMetrics() // Fetch metrics when the component first renders.
-    const interval = setInterval(fetchMetrics, 5000) // Set an interval to fetch the metrics every 5 seconds.
+    fetchMetrics() 
+    const interval = setInterval(fetchMetrics, 5000) 
 
-    return () => clearInterval(interval) // Clear the interval when the component is unmounted to prevent memory leaks.
+    return () => clearInterval(interval) 
   }, [])
-
-  // Display loading message while metrics data is not available.
   if (!metrics) {
-    return <div>Loading...</div> // Display a loading state until metrics are fetched.
+    return <div>Loading...</div> 
   }
 
   return (
@@ -83,11 +74,9 @@ export default function CpuMemoryPage() {
       className="max-w-full w-full"
     >
       <div className="grid gap-6 w-full">
-        {/* CPU Section */}
         <section>
           <h2 className="text-xl font-semibold dark:text-slate-200 text-slate-800 mb-4">CPU Performance</h2>
           <div className="grid gap-6 lg:grid-cols-3 w-full">
-            {/* CPU Usage Chart */}
             <Card className="lg:col-span-2 dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 w-full transition-all duration-300">
               <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">CPU Usage Over Time</h3>
               <div className="h-[300px]">
@@ -143,11 +132,9 @@ export default function CpuMemoryPage() {
               </div>
             </Card>
 
-            {/* CPU Stats */}
             <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 w-full transition-all duration-300">
               <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">CPU Details</h3>
               <div className="space-y-6">
-                {/* Display current CPU usage with a progress bar */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm dark:text-slate-400 text-slate-600">Current Usage</span>
@@ -161,7 +148,6 @@ export default function CpuMemoryPage() {
                   </div>
                 </div>
 
-                {/* Display CPU details such as cores and clock speed */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="dark:bg-slate-800/30 bg-slate-100/50 p-3 rounded-lg hover:dark:bg-slate-700/40 hover:bg-slate-200/70 transition-all duration-200">
                     <div className="text-xs dark:text-slate-400 text-slate-600 mb-1">Cores</div>
@@ -173,7 +159,6 @@ export default function CpuMemoryPage() {
                   </div>
                 </div>
 
-                {/* Display CPU load averages for 1, 5, and 15 minutes */}
                 <div>
                   <div className="text-xs dark:text-slate-400 text-slate-600 mb-2">Load Average</div>
                   <div className="grid grid-cols-3 gap-2">
@@ -196,11 +181,9 @@ export default function CpuMemoryPage() {
           </div>
         </section>
 
-        {/* Memory Section */}
         <section>
           <h2 className="text-xl font-semibold dark:text-slate-200 text-slate-800 mb-4">Memory Usage</h2>
           <div className="grid gap-6 lg:grid-cols-3 w-full">
-            {/* Memory Usage Chart */}
             <Card className="lg:col-span-2 dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 w-full transition-all duration-300">
               <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">Memory Usage Over Time</h3>
               <div className="h-[300px]">
@@ -256,7 +239,6 @@ export default function CpuMemoryPage() {
               </div>
             </Card>
 
-            {/* Memory Stats */}
             <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 w-full transition-all duration-300">
               <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-4">Memory Details</h3>
               <div className="space-y-6">

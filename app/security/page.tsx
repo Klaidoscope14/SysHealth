@@ -1,11 +1,10 @@
-"use client" // This directive indicates that this component is a client-side component in a Next.js application.
+"use client"
 
 import { useState, useEffect } from "react"
-import { PageContainer } from "@/components/page-container" // Importing the PageContainer component for consistent page layout.
+import { PageContainer } from "@/components/page-container"
 import { Card } from "@/components/ui/card"
 import { AlertTriangle, Shield, FileText, Check, X, AlertCircle, Clock, Shield as ShieldIcon } from "lucide-react"
 
-// Define interfaces
 interface SecurityStatus {
   overallStatus: 'secure' | 'warning' | 'vulnerable';
   lastScan: string;
@@ -38,7 +37,6 @@ interface LogEntry {
   message: string;
 }
 
-// Mock data
 const mockSecurityStatus: SecurityStatus = {
   overallStatus: 'warning',
   lastScan: '2023-07-15 14:30:22',
@@ -162,7 +160,6 @@ export default function SecurityPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Get status color based on security level
   const getStatusColor = (status: 'secure' | 'warning' | 'vulnerable') => {
     switch (status) {
       case 'secure':
@@ -186,7 +183,6 @@ export default function SecurityPage() {
     }
   };
 
-  // Get log entry type color
   const getLogTypeColor = (level: 'info' | 'warning' | 'error') => {
     switch (level) {
       case 'info':
@@ -210,14 +206,12 @@ export default function SecurityPage() {
     }
   };
 
-  // Score color 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-500';
     if (score >= 60) return 'text-amber-500';
     return 'text-red-500';
   };
 
-  // Format the timestamp for better readability
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleString();
@@ -230,7 +224,6 @@ export default function SecurityPage() {
       className="max-w-full w-full px-5"
     >
       <div className="flex flex-col space-y-8 w-full px-2">
-        {/* Security Status Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 w-full transition-all duration-300 hover:shadow-md">
           <div className="flex items-center mb-4">
             <Shield className="h-5 w-5 text-indigo-400 mr-2" />
@@ -288,7 +281,6 @@ export default function SecurityPage() {
               </div>
             </div>
             
-            {/* Right column: Security score and protection status */}
             <div className="space-y-6">
               <div className="p-4 dark:bg-slate-800/50 bg-slate-100/70 rounded-lg flex flex-col items-center justify-center">
                 <h3 className="text-sm font-medium dark:text-slate-300 text-slate-700 mb-3">Security Score</h3>
@@ -351,7 +343,6 @@ export default function SecurityPage() {
           </div>
         </Card>
         
-        {/* Firewall Rules Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 w-full transition-all duration-300 hover:shadow-md">
           <div className="flex items-center mb-4">
             <Shield className="h-5 w-5 text-orange-400 mr-2" />
@@ -421,7 +412,6 @@ export default function SecurityPage() {
           </div>
         </Card>
         
-        {/* System Logs Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 w-full transition-all duration-300 hover:shadow-md">
           <div className="flex items-center mb-4">
             <FileText className="h-5 w-5 text-teal-400 mr-2" />

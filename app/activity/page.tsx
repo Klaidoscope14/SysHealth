@@ -1,11 +1,9 @@
 "use client" 
-// This directive ensures that this component is a Client Component in Next.js, meaning it can use state, effects, and other client-side features.
-
 import { useState, useEffect } from "react"
 import { PageContainer } from "@/components/page-container" 
 import { Card } from "@/components/ui/card"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
-import { Activity, Cpu, Clock, AlertCircle } from "lucide-react"
+import { AlertCircle } from "lucide-react"
 
 interface Process {
   pid: string;
@@ -21,7 +19,6 @@ interface ResourceData {
   memory: number;
 }
 
-// Create a test data generator for development
 const generateTestData = () => {
   const data = [];
   const now = new Date();
@@ -49,7 +46,6 @@ export default function ActivityPage() {
   const [resourceError, setResourceError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Function to fetch processes
     const fetchProcesses = async () => {
       try {
         const response = await fetch("/api/processes");
@@ -65,7 +61,6 @@ export default function ActivityPage() {
       }
     };
 
-    // Function to update resource data
     const updateResourceData = async () => {
       try {
         const response = await fetch("/api/metrics");
@@ -95,15 +90,12 @@ export default function ActivityPage() {
       }
     };
 
-    // Initial fetches
     fetchProcesses();
     updateResourceData();
 
-    // Set up intervals
-    const processInterval = setInterval(fetchProcesses, 10000); // Every 10 seconds
-    const resourceInterval = setInterval(updateResourceData, 5000); // Every 5 seconds
+    const processInterval = setInterval(fetchProcesses, 10000);
+    const resourceInterval = setInterval(updateResourceData, 5000);
 
-    // Cleanup
     return () => {
       clearInterval(processInterval);
       clearInterval(resourceInterval);
@@ -117,7 +109,6 @@ export default function ActivityPage() {
       className="max-w-full w-full"
     >
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 w-full">
-        {/* Active Processes Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 h-[500px] w-full transition-all duration-300">
           <h2 className="text-lg font-medium dark:text-slate-200 text-slate-800 mb-4">Active Processes</h2>
           
@@ -192,7 +183,6 @@ export default function ActivityPage() {
           )}
         </Card>
 
-        {/* Resource Usage Timeline Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-4 h-[500px] w-full transition-all duration-300">
           <h2 className="text-lg font-medium dark:text-slate-200 text-slate-800 mb-4">Resource Usage Timeline</h2>
           

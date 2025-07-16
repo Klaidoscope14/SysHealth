@@ -8,13 +8,11 @@ import { Input } from "@/components/ui/input";
 import { User, Lock, Bell, CheckCircle, Loader2 } from "lucide-react";
 
 export default function SettingsPage() {
-  // Profile state
   const [name, setName] = useState("Admin User");
   const [email, setEmail] = useState("admin@example.com");
   const [profileSaved, setProfileSaved] = useState(false);
   const [isProfileSaving, setIsProfileSaving] = useState(false);
   
-  // Security state
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,31 +20,26 @@ export default function SettingsPage() {
   const [passwordSaved, setPasswordSaved] = useState(false);
   const [isPasswordSaving, setIsPasswordSaving] = useState(false);
   
-  // Notification preferences state
   const [systemUpdates, setSystemUpdates] = useState(true);
   const [securityAlerts, setSecurityAlerts] = useState(true);
   const [maintenanceNotifs, setMaintenanceNotifs] = useState(false);
   const [notificationsSaved, setNotificationsSaved] = useState(false);
   const [isNotificationsSaving, setIsNotificationsSaving] = useState(false);
   
-  // Initialize profile from localStorage if it exists
   useEffect(() => {
     try {
-      // Try loading from localStorage first
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
         const profileData = JSON.parse(savedProfile);
         setName(profileData.name);
         setEmail(profileData.email);
       } else {
-        // If no localStorage data, try fetching from API
         fetch('/api/profile')
           .then(res => res.json())
           .then(data => {
             if (data.success && data.profile) {
               setName(data.profile.name);
               setEmail(data.profile.email);
-              // Also save to localStorage for future use
               localStorage.setItem('userProfile', JSON.stringify(data.profile));
             }
           })
@@ -65,22 +58,17 @@ export default function SettingsPage() {
     }
   }, []);
   
-  // Handle profile save
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate profile data
     if (!name.trim() || !email.trim()) {
       return;
     }
     
-    // Show loading state
     setIsProfileSaving(true);
     
-    // Prepare profile data
     const profileData = { name, email };
     
-    // Simulate API call with timeout
     fetch('/api/profile', {
       method: 'POST',
       headers: {
@@ -91,7 +79,6 @@ export default function SettingsPage() {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          // Save to localStorage
           localStorage.setItem('userProfile', JSON.stringify(profileData));
           
           const event = new Event('profileUpdated');
@@ -113,13 +100,11 @@ export default function SettingsPage() {
       });
   };
   
-  // Handle password update
   const handleUpdatePassword = (e: React.FormEvent) => {
     e.preventDefault();
     setPasswordError("");
     setPasswordSaved(false);
     
-    // Validate password data
     if (!currentPassword) {
       setPasswordError("Current password is required");
       return;
@@ -140,33 +125,25 @@ export default function SettingsPage() {
       return;
     }
     
-    // Show loading state
     setIsPasswordSaving(true);
     
-    // Simulate API call with timeout
     setTimeout(() => {
       console.log("Password updated");
       
-      // Reset form and show success
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
       setIsPasswordSaving(false);
       setPasswordSaved(true);
       
-      // Auto hide success message after 3 seconds
       setTimeout(() => setPasswordSaved(false), 3000);
     }, 800);
   };
   
-  // Handle notification preferences save
   const handleSaveNotifications = () => {
-    // Show loading state
     setIsNotificationsSaving(true);
     
-    // Simulate API call with timeout
     setTimeout(() => {
-      // Save to localStorage
       const notificationPreferences = {
         systemUpdates,
         securityAlerts,
@@ -174,14 +151,11 @@ export default function SettingsPage() {
       };
       localStorage.setItem('notificationPreferences', JSON.stringify(notificationPreferences));
       
-      // In a real app, you would save these preferences to a database or API
       console.log("Notification preferences saved:", notificationPreferences);
       
-      // Update the UI
       setIsNotificationsSaving(false);
       setNotificationsSaved(true);
       
-      // Auto hide success message after 3 seconds
       setTimeout(() => setNotificationsSaved(false), 3000);
     }, 800);
   };
@@ -192,7 +166,6 @@ export default function SettingsPage() {
       description="Manage your account settings and preferences"
     >
       <div className="flex flex-col space-y-8 w-full">
-        {/* Profile Card */}
         <Card className="p-6 bg-slate-900/50 border-slate-700/50 backdrop-blur-sm dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 w-full transition-all duration-300 hover:shadow-md relative">
           {profileSaved && (
             <div className="absolute top-4 right-4 flex items-center px-3 py-1 rounded-md bg-green-900/80 border border-green-700 text-green-100">
@@ -263,7 +236,6 @@ export default function SettingsPage() {
           </form>
         </Card>
 
-        {/* Security Card */}
         <Card className="p-6 bg-slate-900/50 border-slate-700/50 backdrop-blur-sm dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 w-full transition-all duration-300 hover:shadow-md relative">
           {passwordSaved && (
             <div className="absolute top-4 right-4 flex items-center px-3 py-1 rounded-md bg-green-900/80 border border-green-700 text-green-100">
@@ -359,7 +331,6 @@ export default function SettingsPage() {
           </div>
         </Card>
 
-        {/* Notifications Card */}
         <Card className="p-6 bg-slate-900/50 border-slate-700/50 backdrop-blur-sm dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 w-full transition-all duration-300 hover:shadow-md relative">
           {notificationsSaved && (
             <div className="absolute top-4 right-4 flex items-center px-3 py-1 rounded-md bg-green-900/80 border border-green-700 text-green-100">

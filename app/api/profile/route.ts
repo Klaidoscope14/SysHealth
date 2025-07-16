@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Default profile if none exists
 const DEFAULT_PROFILE = {
   name: "Admin User",
   email: "admin@example.com"
@@ -14,12 +13,10 @@ export async function GET() {
   });
 }
 
-// POST handler to update the user profile
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
     
-    // Validate the request body
     if (!data.name || !data.email) {
       return NextResponse.json({ 
         success: false, 

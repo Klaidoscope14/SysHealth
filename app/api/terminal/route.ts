@@ -4,25 +4,23 @@ import { NextResponse } from 'next/server'
 const getTerminalCommand = () => {
   switch (process.platform) {
     case 'darwin': 
-      return 'open -a Terminal .' // macOS: Opens the default Terminal app
+      return 'open -a Terminal .' 
     case 'win32': 
-      return 'start cmd.exe' // Windows: Opens Command Prompt
+      return 'start cmd.exe' 
     case 'linux': 
-      // Linux: Try different terminal emulators in order
       const linuxTerminals = [
-        'gnome-terminal', // GNOME Terminal
-        'konsole',        // KDE Konsole
-        'xterm',          // XTerm
-        'terminator',     // Terminator
-        'urxvt'           // RXVT-Unicode
+        'gnome-terminal', 
+        'konsole',        
+        'xterm',          
+        'terminator',     
+        'urxvt'           
       ]
-      return linuxTerminals.join(' || ') // Tries each terminal until one works
+      return linuxTerminals.join(' || ') 
     default:
-      return 'xterm' // Fallback for unknown OS
+      return 'xterm'
   }
 }
 
-// API endpoint to open the system terminal
 export async function POST() {
   try {
     const command = getTerminalCommand() 
@@ -33,7 +31,7 @@ export async function POST() {
           console.error('Error executing terminal command:', error)
           resolve(NextResponse.json({ error: 'Failed to open terminal' }, { status: 500 })) 
         } else {
-          resolve(NextResponse.json({ success: true })) // Return success if terminal opens
+          resolve(NextResponse.json({ success: true })) 
         }
       })
     })

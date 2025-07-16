@@ -27,23 +27,19 @@ export function TopNav() {
     { id: 3, text: "Security scan completed", time: "3 hours ago" },
   ])
 
-  // This effect runs once after the component mounts
   useEffect(() => {
     setMounted(true)
     
-    // Load user profile from localStorage if available
     try {
       const savedProfile = localStorage.getItem('userProfile')
       if (savedProfile) {
         setUserProfile(JSON.parse(savedProfile))
       } else {
-        // If not in localStorage, try to fetch from API
         fetch('/api/profile')
           .then(res => res.json())
           .then(data => {
             if (data.success && data.profile) {
               setUserProfile(data.profile)
-              // Also save to localStorage for future use
               localStorage.setItem('userProfile', JSON.stringify(data.profile))
             }
           })
@@ -53,7 +49,6 @@ export function TopNav() {
       console.error('Error loading profile from localStorage:', error)
     }
     
-    // Set up event listener for profile updates
     const handleProfileUpdate = () => {
       try {
         const savedProfile = localStorage.getItem('userProfile')
@@ -67,41 +62,32 @@ export function TopNav() {
       }
     }
     
-    // Handle storage events specifically
     const handleStorageEvent = (event: StorageEvent) => {
       if (event.key === 'userProfile') {
         handleProfileUpdate()
       }
     }
     
-    // Listen for storage events from other tabs/windows
     window.addEventListener('storage', handleStorageEvent)
     
-    // Listen for custom event from settings page
     window.addEventListener('profileUpdated', handleProfileUpdate)
     
     return () => {
-      // Clean up event listeners with the same function references
       window.removeEventListener('storage', handleStorageEvent)
       window.removeEventListener('profileUpdated', handleProfileUpdate)
     }
   }, [])
 
-  // Handle sign out functionality
   const handleSignOut = () => {
-    // For now, just log out to console. In a real app, this would call your auth service
     console.log("User signed out")
-    // You could redirect to login page or clear credentials here
   }
 
-  // Mark notifications as read when dropdown is opened
   const handleNotificationsOpen = () => {
     setHasUnreadNotifications(false)
   }
 
   return (
     <div className="flex items-center gap-4">
-      {/* Theme Toggle */}
       <Button
         variant="ghost"
         size="icon"
@@ -117,7 +103,6 @@ export function TopNav() {
         )}
       </Button>
 
-      {/* Notifications */}
       <DropdownMenu onOpenChange={handleNotificationsOpen}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -142,7 +127,6 @@ export function TopNav() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Profile */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

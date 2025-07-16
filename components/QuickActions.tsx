@@ -8,7 +8,6 @@ import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 
 export function QuickActions() {
-  // State for resource allocation
   const [processingPower, setProcessingPower] = useState(42)
   const [memoryAllocation, setMemoryAllocation] = useState(68)
   const [networkBandwidth, setNetworkBandwidth] = useState(35)
@@ -18,52 +17,44 @@ export function QuickActions() {
   const [isBackingUp, setIsBackingUp] = useState(false)
   const [notification, setNotification] = useState<{ title: string; message: string; type: 'info' | 'success' | 'error' } | null>(null)
 
-  // Show notification
   const showNotification = (title: string, message: string, type: 'info' | 'success' | 'error' = 'info') => {
     setNotification({ title, message, type })
     
-    // Auto dismiss after 3 seconds
     setTimeout(() => {
       setNotification(null)
     }, 3000)
   }
 
-  // Handle security scan
   const handleSecurityScan = async () => {
     if (isScanning) return
     
     setIsScanning(true)
     showNotification("Security scan initiated", "Scanning system for security vulnerabilities...", "info")
     
-    // Simulate scan process
     setTimeout(() => {
       setIsScanning(false)
       showNotification("Security scan completed", "No vulnerabilities found. System is secure.", "success")
     }, 3000)
   }
   
-  // Handle data sync
   const handleSyncData = async () => {
     if (isSyncing) return
     
     setIsSyncing(true)
     showNotification("Data synchronization started", "Syncing system data with remote servers...", "info")
     
-    // Simulate sync process
     setTimeout(() => {
       setIsSyncing(false)
       showNotification("Data sync completed", "All data synchronized successfully.", "success")
     }, 4000)
   }
   
-  // Handle backup
   const handleBackup = async () => {
     if (isBackingUp) return
     
     setIsBackingUp(true)
     showNotification("System backup initiated", "Backing up critical system data...", "info")
     
-    // Simulate backup process with progress
     let progress = 0
     const interval = setInterval(() => {
       progress += 10
@@ -77,12 +68,10 @@ export function QuickActions() {
     }, 800)
   }
   
-  // Handle console open
   const handleOpenConsole = async () => {
     showNotification("Console opened", "Opening system terminal...", "info")
     
     try {
-      // Make a request to the terminal API endpoint
       const response = await fetch('/api/terminal', {
         method: 'POST',
         headers: {
@@ -106,28 +95,23 @@ export function QuickActions() {
     }
   }
 
-  // Handle priority level change
   const handlePriorityChange = (value: number[]) => {
     const newPriority = value[0]
     setPriorityLevel(newPriority)
     
-    // Apply resource allocation based on priority level
     if (newPriority >= 4) {
-      // High priority - allocate more resources
       setProcessingPower(Math.min(processingPower + 10, 90))
       setMemoryAllocation(Math.min(memoryAllocation + 10, 90))
       setNetworkBandwidth(Math.min(networkBandwidth + 10, 90))
       
       showNotification("Priority increased", "System resources have been reallocated for higher performance.", "info")
     } else if (newPriority <= 2) {
-      // Low priority - conserve resources
       setProcessingPower(Math.max(processingPower - 20, 20))
       setMemoryAllocation(Math.max(memoryAllocation - 20, 30))
       setNetworkBandwidth(Math.max(networkBandwidth - 20, 15))
       
       showNotification("Priority decreased", "System is now operating in power-saving mode.", "info")
     } else {
-      // Medium priority - balanced allocation
       setProcessingPower(42)
       setMemoryAllocation(68)
       setNetworkBandwidth(35)
@@ -136,7 +120,6 @@ export function QuickActions() {
     }
   }
 
-  // Quick actions array with icons, labels, and handlers
   const quickActions = [
     { 
       icon: Shield, 
@@ -166,9 +149,7 @@ export function QuickActions() {
 
   return (
     <div className="space-y-8 relative">
-      {/* Quick Actions Card */}
       <Card className="bg-slate-800/80 dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 relative">
-        {/* Notification */}
         {notification && (
           <div className={`absolute -top-16 left-0 right-0 p-4 rounded-lg shadow-lg transition-all duration-300 z-50 ${
             notification.type === 'success' ? 'bg-green-900/90 border border-green-700' : 
@@ -203,12 +184,10 @@ export function QuickActions() {
         </div>
       </Card>
 
-      {/* Resource Allocation Card */}
       <Card className="bg-slate-800/80 dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6">
         <h2 className="text-xl font-semibold dark:text-slate-200 text-slate-800 mb-4">Resource Allocation</h2>
         
         <div className="space-y-4">
-          {/* Processing Power Allocation */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <div className="text-sm dark:text-slate-400 text-slate-300">Processing Power</div>
@@ -219,7 +198,6 @@ export function QuickActions() {
             </Progress>
           </div>
 
-          {/* Memory Allocation */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <div className="text-sm dark:text-slate-400 text-slate-300">Memory Allocation</div>
@@ -230,7 +208,6 @@ export function QuickActions() {
             </Progress>
           </div>
 
-          {/* Network Bandwidth Allocation */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <div className="text-sm dark:text-slate-400 text-slate-300">Network Bandwidth</div>
@@ -241,7 +218,6 @@ export function QuickActions() {
             </Progress>
           </div>
 
-          {/* Priority Level Slider */}
           <div className="pt-4 border-t border-slate-700/50">
             <div className="flex items-center justify-between text-sm mb-2">
               <div className="dark:text-slate-400 text-slate-300">Priority Level</div>

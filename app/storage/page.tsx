@@ -22,18 +22,14 @@ interface IOActivityData {
 }
 
 export default function StoragePage() {
-  // State for disk information
   const [disks, setDisks] = useState<DiskInfo[]>([]);
   const [isLoadingDisks, setIsLoadingDisks] = useState(true);
   const [diskError, setDiskError] = useState<string | null>(null);
   
-  // State for I/O activity
   const [ioActivity, setIOActivity] = useState<IOActivityData[]>([]);
   
-  // Colors for the pie chart
   const COLORS = ['#22d3ee', '#a855f7', '#3b82f6', '#10b981', '#f97316', '#ef4444'];
   
-  // Generate mock I/O activity data
   const generateIOData = () => {
     const data = [];
     const now = new Date();
@@ -52,7 +48,6 @@ export default function StoragePage() {
     return data;
   };
 
-  // Fetch disk information
   useEffect(() => {
     const fetchDiskInfo = async () => {
       try {
@@ -69,22 +64,17 @@ export default function StoragePage() {
       }
     };
 
-    // Initial fetch
     fetchDiskInfo();
     setIOActivity(generateIOData());
     
-    // Refresh data every 30 seconds
     const interval = setInterval(fetchDiskInfo, 30000);
     
-    // IO Activity simulation update every 5 seconds
     const ioInterval = setInterval(() => {
       setIOActivity(prev => {
         const newData = [...prev];
         
-        // Remove oldest data point
         if (newData.length > 0) newData.shift();
         
-        // Add new data point
         const now = new Date();
         newData.push({
           time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -102,7 +92,6 @@ export default function StoragePage() {
     };
   }, []);
 
-  // Prepare data for the pie chart
   const pieData = disks.map(disk => ({
     name: disk.name,
     value: disk.usagePercentage,
@@ -117,7 +106,6 @@ export default function StoragePage() {
       className="max-w-full w-full"
     >
       <div className="flex flex-col space-y-6 w-full">
-        {/* Disk Usage Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 w-full transition-all duration-300">
           <div className="flex items-center mb-4">
             <HardDrive className="h-5 w-5 text-cyan-400 mr-2" />
@@ -213,7 +201,6 @@ export default function StoragePage() {
           )}
         </Card>
         
-        {/* File Systems Card */}
         <Card className="dark:bg-slate-900/50 dark:border-slate-700/50 bg-white/60 border-slate-200/70 backdrop-blur-sm p-6 w-full transition-all duration-300">
           <div className="flex items-center mb-4">
             <Database className="h-5 w-5 text-purple-400 mr-2" />

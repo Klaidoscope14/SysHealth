@@ -50,7 +50,6 @@ interface DetailedMetrics {
 
 export function PerformanceGraph() {
   const [chartData, setChartData] = useState<MetricData[]>([
-    // Initialize with a couple of dummy data points to ensure chart renders immediately
     {
       timestamp: "00:00:00",
       cpu: 0,
@@ -139,12 +138,9 @@ export function PerformanceGraph() {
       }
     }
 
-    // Initial fetch
     fetchMetrics()
     fetchProcesses()
     fetchStorage()
-
-    // Set up intervals for real-time updates
     const metricsInterval = setInterval(fetchMetrics, 5000)
     const processesInterval = setInterval(fetchProcesses, 5000)
     const storageInterval = setInterval(fetchStorage, 300000) // Update storage every 5 minutes
@@ -200,7 +196,6 @@ export function PerformanceGraph() {
 
           <TabsContent value="performance" className="mt-0">
             <div className="grid grid-cols-4 gap-4">
-              {/* Main graph area - 3 columns */}
               <div className="col-span-3">
                 <div className="relative">
                   <div className="h-[300px]">
@@ -225,14 +220,12 @@ export function PerformanceGraph() {
                           </linearGradient>
                         </defs>
                         
-                        {/* Grid lines */}
                         <CartesianGrid 
                           strokeDasharray="3 3" 
                           stroke="#334155" 
                           vertical={false}
                         />
                         
-                        {/* Y-axis */}
                         <YAxis
                           stroke="#94a3b8"
                           fontSize={12}
@@ -243,7 +236,6 @@ export function PerformanceGraph() {
                           tickFormatter={(value) => `${value}%`}
                         />
                         
-                        {/* X-axis */}
                         <XAxis
                           dataKey="timestamp"
                           stroke="#94a3b8"
@@ -252,7 +244,6 @@ export function PerformanceGraph() {
                           axisLine={false}
                         />
                         
-                        {/* Tooltip for displaying values on hover */}
                         <Tooltip
                           content={({ active, payload }) => {
                             if (active && payload && payload.length) {
@@ -286,7 +277,6 @@ export function PerformanceGraph() {
                           }}
                         />
                         
-                        {/* Areas for each metric */}
                         <Area
                           type="monotone"
                           dataKey="cpu"
@@ -320,10 +310,8 @@ export function PerformanceGraph() {
                 </div>
               </div>
 
-              {/* Stats sidebar - 1 column */}
               <div className="col-span-1">
                 <div className="space-y-4">
-                  {/* CPU Stats */}
                   <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded-lg p-3">
                     <h4 className="text-xs uppercase tracking-wider dark:text-slate-400 text-slate-500 mb-2">CPU</h4>
                     <div className="flex flex-col gap-1">
@@ -348,7 +336,6 @@ export function PerformanceGraph() {
                     </div>
                   </div>
 
-                  {/* Memory Stats */}
                   <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded-lg p-3">
                     <h4 className="text-xs uppercase tracking-wider dark:text-slate-400 text-slate-500 mb-2">Memory</h4>
                     <div className="flex flex-col gap-1">
@@ -373,7 +360,6 @@ export function PerformanceGraph() {
                     </div>
                   </div>
 
-                  {/* Network Stats - Placeholder */}
                   <div className="dark:bg-slate-800/50 bg-slate-100/70 rounded-lg p-3">
                     <h4 className="text-xs uppercase tracking-wider dark:text-slate-400 text-slate-500 mb-2">Network</h4>
                     <div className="flex flex-col gap-1">
